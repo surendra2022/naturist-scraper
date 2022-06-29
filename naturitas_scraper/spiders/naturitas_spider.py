@@ -4,7 +4,7 @@ import scrapy
 class NaturitasSpiderSpider(scrapy.Spider):
     name = 'naturitas_spider'
     allowed_domains = ['naturitas.es']
-    start_urls = ['https://www.naturitas.es/c/u']
+    start_urls = ['https://www.naturitas.es/c/suplementos]
 
     def parse(self, response):
         product_links = response.css('a.product-item-link::attr(href)').extract()
@@ -17,7 +17,7 @@ class NaturitasSpiderSpider(scrapy.Spider):
             page_number = response.meta.get('page_number', 1)
             page_number += 1
             url = original_url+ f'?&p={page_number}'
-            yield scrapy.Request(url, callback=self.parse, meta={'page_number': page_number, 'original_url': original_url})
+            yield scrapy.Request(url, callback=self.parse, meta={'page_number': page_number, 'original_url': original_url}, dont_filter=True)
     
     def parse_product(self, response):
         product_name = response.css('h1 span::text').extract_first()
